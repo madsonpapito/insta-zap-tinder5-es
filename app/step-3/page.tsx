@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import Script from "next/script" // Importa o componente <Script> do Next.js
+import Script from "next/script"
 import { Loader2, CheckCircle, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -15,6 +15,13 @@ interface ProgressStep {
   status: "pending" | "loading" | "completed"
 }
 
+interface InstagramPost {
+  id: string
+  media_url: string
+  media_type: string
+  thumbnail_url?: string
+}
+
 export default function Step3() {
   const router = useRouter()
 
@@ -22,18 +29,23 @@ export default function Step3() {
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
   const [location, setLocation] = useState<string>("Detecting location...")
+  const [instagramUsername, setInstagramUsername] = useState<string | null>(null)
+  const [instagramPosts, setInstagramPosts] = useState<InstagramPost[]>([])
+  const [loadingPosts, setLoadingPosts] = useState(false)
 
   // Estados para a simulação de carregamento
   const [progress, setProgress] = useState(0)
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isCompleted, setIsCompleted] = useState(false)
-  const [visibleSteps, setVisibleSteps] = useState<number>(1) // Controla a exibição animada dos passos
+  const [visibleSteps, setVisibleSteps] = useState<number>(1)
+  const [scanningStatus, setScanningStatus] = useState<string>("")
 
   // Efeito para buscar dados do localStorage e a localização do usuário ao montar o componente
   useEffect(() => {
     // Recupera dados do Step 2
     const storedPhone = localStorage.getItem("phoneNumber")
     const storedPhoto = localStorage.getItem("profilePhoto")
+    const storedProfileData = localStorage.getItem("igProfileCacheV1")
 
     setPhoneNumber(storedPhone || "Number not found")
     setProfilePhoto(
@@ -41,53 +53,85 @@ export default function Step3() {
         "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=",
     )
 
+    if (storedProfileData) {
+      try {
+        const cache = JSON.parse(storedProfileData)
+        const username = Object.keys(cache)[0]
+        if (username) {
+          setInstagramUsername(username)
+        }
+      } catch (e) {
+        console.error("[v0] Error parsing profile cache:", e)
+      }
+    }
+
     const fetchLocation = async () => {
-  try {
-    // Cria um AbortController com um timeout de 5 segundos
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 5000)
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000)
 
-    // Chama a sua API interna em /api/location
-    const response = await fetch("/api/location", {
-      signal: controller.signal,
-    })
-    clearTimeout(timeoutId)
+        const response = await fetch("/api/location", {
+          signal: controller.signal,
+        })
+        clearTimeout(timeoutId)
 
-    if (!response.ok) throw new Error("Failed to fetch location from internal API")
-    const data = await response.json()
-    
-    // Define a localização com base na resposta da sua API
-    setLocation(data.city || "Unknown Location") 
-  } catch (error) {
-    // Falha silenciosa com um fallback
-    console.error("[v0] Location fetch error:", error)
-    setLocation("Your Location") // Fallback em caso de erro
-  }
-}
+        if (!response.ok) throw new Error("Failed to fetch location from internal API")
+        const data = await response.json()
 
-    // Call fetchLocation without awaiting to prevent blocking
+        setLocation(data.city || "Unknown Location")
+      } catch (error) {
+        console.error("[v0] Location fetch error:", error)
+        setLocation("Your Location")
+      }
+    }
+
     fetchLocation()
   }, [])
 
-  // Memoiza a lista de passos para que ela seja recriada apenas quando a 'location' mudar
+  useEffect(() => {
+    if (instagramUsername && !loadingPosts && instagramPosts.length === 0) {
+      const fetchPosts = async () => {
+        setLoadingPosts(true)
+        try {
+          const response = await fetch("/api/instagram/posts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: instagramUsername }),
+          })
+          const result = await response.json()
+
+          if (result.success && result.posts?.data?.items) {
+            // Get first 9 posts for 3x3 grid
+            const posts = result.posts.data.items.slice(0, 9).map((item: any) => ({
+              id: item.id || Math.random().toString(),
+              media_url: item.image_versions2?.candidates?.[0]?.url || item.thumbnail_url || "",
+              media_type: item.media_type,
+              thumbnail_url: item.image_versions2?.candidates?.[0]?.url || "",
+            }))
+            setInstagramPosts(posts)
+          }
+        } catch (error) {
+          console.error("[v0] Error fetching Instagram posts:", error)
+        } finally {
+          setLoadingPosts(false)
+        }
+      }
+
+      fetchPosts()
+    }
+  }, [instagramUsername, loadingPosts, instagramPosts.length])
+
   const steps: ProgressStep[] = useMemo(
     () => [
-      { id: "initiating", text: "Initiating connection with WhatsApp servers...", status: "pending" },
-      { id: "locating", text: "Locating the nearest server...", status: "pending" },
-      { id: "establishing", text: "Server located! Establishing secure connection...", status: "pending" },
-      { id: "verifying", text: "Verifying phone number...", status: "pending" },
-      { id: "valid", text: "Valid phone number", status: "pending" },
-      { id: "analyzing", text: "Analyzing database...", status: "pending" },
-      { id: "fetching", text: "Fetching profile information...", status: "pending" },
-      { id: "detecting", text: "Detecting device location...", status: "pending" },
-      { id: "suspicious", text: `Suspicious activity detected near ${location}...`, status: "pending" },
-      { id: "preparing", text: "Preparing private reading channel...", status: "pending" },
-      { id: "established", text: "Private channel established!", status: "pending" },
-      { id: "synchronizing", text: "Synchronizing messages...", status: "pending" },
-      { id: "complete", text: "Synchronization complete!", status: "pending" },
-      { id: "granted", text: "Access successfully granted!", status: "pending" },
+      { id: "initiating", text: "Initiating connection to Instagram servers...", status: "pending" },
+      { id: "checking", text: "Checking profile availability...", status: "pending" },
+      { id: "found", text: "Profile found! Validating metadata...", status: "pending" },
+      { id: "analyzing", text: "Analyzing recent mentions and interactions...", status: "pending" },
+      { id: "searching", text: "Searching for archived stories and screenshots...", status: "pending" },
+      { id: "mapping", text: "Mapping conversation patterns in Direct...", status: "pending" },
+      { id: "complete", text: "Synchronization completed successfully.", status: "pending" },
     ],
-    [location],
+    [],
   )
 
   const [currentSteps, setCurrentSteps] = useState<ProgressStep[]>([])
@@ -99,13 +143,14 @@ export default function Step3() {
     }
   }, [steps, currentSteps.length])
 
-  // Lógica principal dos timers para a barra de progresso e a transição entre os passos
   useEffect(() => {
-    if (!steps.length || currentSteps.length === 0) return // Não inicia os timers até os passos estarem prontos
+    if (!steps.length || currentSteps.length === 0) return
 
-    const totalDuration = 4 * 60 * 1000 // Duração total de 4 minutos
+    const totalDuration = 25 * 1000 // 25 seconds
     const stepInterval = totalDuration / steps.length
     const progressInterval = 100
+
+    setScanningStatus(steps[0]?.text || "")
 
     const progressTimer = setInterval(() => {
       setProgress((prev) => {
@@ -129,6 +174,7 @@ export default function Step3() {
               return step
             }),
           )
+          setScanningStatus(steps[nextIndex]?.text || "")
           setVisibleSteps(nextIndex + 1)
           return nextIndex
         } else {
@@ -206,6 +252,7 @@ export default function Step3() {
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-700 font-medium text-sm">
+                      <span className="text-green-600 font-mono">[SCANNING]</span>{" "}
                       {currentSteps[currentStepIndex]?.text || "Connecting..."}
                     </span>
                     <span className="text-green-600 font-bold text-sm">{Math.round(progress)}%</span>
@@ -217,6 +264,34 @@ export default function Step3() {
                     ></div>
                   </div>
                 </div>
+
+                {instagramPosts.length > 0 && (
+                  <div className="mb-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-medium text-gray-600">
+                        <span className="text-yellow-600 font-mono">[STATUS]</span> Searching for connected accounts...
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {instagramPosts.map((post, index) => (
+                        <div
+                          key={post.id}
+                          className="aspect-square rounded-md overflow-hidden bg-gray-200 animate-fade-in"
+                          style={{
+                            animationDelay: `${index * 0.1}s`,
+                          }}
+                        >
+                          <img
+                            src={post.thumbnail_url || post.media_url || "/placeholder.svg"}
+                            alt={`Post ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
                   {currentSteps.slice(0, visibleSteps).map((step, index) => (
                     <div
@@ -279,7 +354,7 @@ export default function Step3() {
               Email Support
             </Link>
           </div>
-          <p className="text-gray-400 text-xs">© 2024 Protect Your Relationship. All rights reserved.</p>
+          <p className="text-gray-400 text-xs">© 2025 Protect Your Relationship. All rights reserved.</p>
         </footer>
       </div>
 
@@ -297,6 +372,22 @@ export default function Step3() {
           `,
         }}
       />
+
+      <style jsx global>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out forwards;
+        }
+      `}</style>
     </>
   )
 }
