@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Input } from "@/components/ui/input"
-import { User, CheckCircle, Heart, MessageCircle, Lock, AlertTriangle, Wifi, LockOpen } from "lucide-react"
+import { User, CheckCircle, Heart, MessageCircle, Lock, AlertTriangle, Wifi, LockOpen, ShieldCheck } from "lucide-react"
 
 // ==========================================================
 // DADOS DOS PERFIS E IMAGENS
@@ -72,7 +72,7 @@ const LIKED_BY_FEMALE_STORIES = [
 ]
 
 // Array de comentários para a seção "INTERCEPTED"
-const INTERCEPTED_COMMENTS = ["Wow, you are very hot 🥰", "🫣😏", "I'm getting horny 🥵", "drives me crazy 😈"]
+const INTERCEPTED_COMMENTS = ["Wow, estás muy bueno 🥰", "🫣😏", "Me estoy excitando 🥵", "me vuelves loco 😈"]
 // ==========================================================
 
 // --- Funções auxiliares ---
@@ -115,9 +115,11 @@ const PageHeader = () => (
       <span role="img" aria-label="magnifying glass">
         🔍
       </span>{" "}
-      Help Us Find What They're Hiding
+      Ayúdanos a Encontrar Lo Que Están Ocultando
     </h1>
-    <p className="text-white">The more details you provide, the deeper we can dig. Everything stays 100% anonymous.</p>
+    <p className="text-white">
+      Cuantos más detalles proporciones, más profundo podemos investigar. Todo permanece 100% anónimo.
+    </p>
   </header>
 )
 
@@ -237,7 +239,7 @@ export default function Step2() {
         const result = await response.json()
 
         if (!response.ok || !result.success) {
-          throw new Error(result.error || "Perfil não encontrado ou privado.")
+          throw new Error(result.error || "Perfil no encontrado o privado.")
         }
 
         const profile = result.profile
@@ -355,10 +357,10 @@ export default function Step2() {
             <div className="w-14 h-14 rounded-full bg-gray-700 animate-pulse"></div>
           )}
           <div>
-            <p className="text-green-400 font-bold text-sm">Instagram Profile Detected</p>
+            <p className="text-green-400 font-bold text-sm">Perfil de Instagram Detectado</p>
             <p className="font-bold text-lg text-white">@{profile.username}</p>
             <p className="text-gray-400 text-sm">
-              {profile.media_count} posts • {profile.follower_count} followers
+              {profile.media_count} publicaciones • {profile.follower_count} seguidores
             </p>
           </div>
         </div>
@@ -383,28 +385,28 @@ export default function Step2() {
   const renderInitialStep = () => (
     <>
       <div className="w-full text-left space-y-3">
-        <h3 className="text-lg font-semibold text-gray-800">What gender are they?</h3>
+        <h3 className="text-lg font-semibold text-gray-800">¿Cuál es su género?</h3>
         <div className="grid grid-cols-3 gap-3">
           <button
             onClick={() => setSelectedGender("male")}
             className={`p-3 rounded-xl border-2 flex flex-col items-center justify-center space-y-2 transition-all duration-200 transform hover:scale-105 ${selectedGender === "male" ? "border-indigo-500 bg-indigo-50 shadow-md" : "border-gray-200 bg-white hover:border-gray-300"}`}
           >
             <span className="text-3xl">👱‍♂️</span>
-            <span className="font-medium text-sm text-gray-700">Male</span>
+            <span className="font-medium text-sm text-gray-700">Hombre</span>
           </button>
           <button
             onClick={() => setSelectedGender("female")}
             className={`p-3 rounded-xl border-2 flex flex-col items-center justify-center space-y-2 transition-all duration-200 transform hover:scale-105 ${selectedGender === "female" ? "border-indigo-500 bg-indigo-50 shadow-md" : "border-gray-200 bg-white hover:border-gray-300"}`}
           >
             <span className="text-3xl">👱‍♀️</span>
-            <span className="font-medium text-sm text-gray-700">Female</span>
+            <span className="font-medium text-sm text-gray-700">Mujer</span>
           </button>
           <button
             onClick={() => setSelectedGender("non-binary")}
             className={`p-3 rounded-xl border-2 flex flex-col items-center justify-center space-y-2 transition-all duration-200 transform hover:scale-105 ${selectedGender === "non-binary" ? "border-indigo-500 bg-indigo-50 shadow-md" : "border-gray-200 bg-white hover:border-gray-300"}`}
           >
             <span className="text-3xl">👱</span>
-            <span className="font-medium text-sm text-gray-700">Non-binary</span>
+            <span className="font-medium text-sm text-gray-700">No binario</span>
           </button>
         </div>
       </div>
@@ -421,14 +423,16 @@ export default function Step2() {
           <circle cx="12" cy="12" r="6" stroke="currentColor" strokeWidth="1.5" />
           <circle cx="12" cy="12" r="2" fill="currentColor" />
         </svg>
-        <h1 className="text-2xl font-bold text-black tracking-wide">TARGET IDENTIFICATION</h1>
+        <h1 className="text-2xl font-bold text-black tracking-wide">IDENTIFICACIÓN DE OBJETIVO</h1>
       </div>
-      <p className="text-gray-600 !-mt-4 pt-6">Enter the @Instagram username below and perform a quick search.</p>
+      <p className="text-gray-600 !-mt-4 pt-6">
+        Ingresa el nombre de usuario de @Instagram a continuación y realiza una búsqueda rápida.
+      </p>
       <div className="relative w-full">
         <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
         <Input
           type="text"
-          placeholder="username"
+          placeholder="nombre de usuario"
           autoComplete="off"
           className="w-full bg-white border-2 border-black/20 text-black pl-12 h-14 text-base rounded-lg focus:border-pink-500 focus:ring-pink-500/50 shadow-inner"
           value={instagramHandle}
@@ -458,18 +462,18 @@ export default function Step2() {
         disabled={!profileData || isLoading}
         className="w-full py-4 text-lg font-bold text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg shadow-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
       >
-        🔍 Continue Analysis
+        🔍 Continuar Análisis
       </button>
     </>
   )
 
   const renderLoadingStep = () => (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-2xl font-bold text-black">Analyzing Profile...</h2>
+      <h2 className="text-2xl font-bold text-black">Analizando Perfil...</h2>
       {profileData && renderProfileCard(profileData)}
       <div className="w-full space-y-3">
         <p className="font-mono text-sm text-gray-700">
-          [SCANNING] Cross-referencing databases... ({Math.floor(loadingProgress)}%)
+          [ESCANEANDO] Verificando bases de datos... ({Math.floor(loadingProgress)}%)
         </p>
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
@@ -481,7 +485,7 @@ export default function Step2() {
 
       {instagramPosts.length > 0 && visiblePosts > 0 && (
         <div className="w-full space-y-3 animate-fade-in">
-          <p className="font-mono text-xs text-yellow-600 text-center">[STATUS] Searching for connected accounts...</p>
+          <p className="font-mono text-xs text-yellow-600 text-center">[ESTADO] Buscando cuentas conectadas...</p>
           <div className="grid grid-cols-3 gap-2">
             {instagramPosts.slice(0, visiblePosts).map((post, index) => {
               const imageUrl = post.imageUrl || "/placeholder.svg?height=200&width=200"
@@ -507,39 +511,37 @@ export default function Step2() {
                 </div>
               )
             })}
-            {/* Placeholder boxes for posts not yet revealed */}
             {Array.from({ length: 9 - visiblePosts }).map((_, index) => (
               <div key={`placeholder-${index}`} className="aspect-square rounded-lg bg-gray-300 animate-pulse" />
             ))}
           </div>
         </div>
       )}
-      {/* Show a message if no posts were fetched */}
       {instagramPosts.length === 0 && visiblePosts > 0 && (
         <div className="w-full text-center">
-          <p className="font-mono text-xs text-gray-500">[INFO] Loading posts from Instagram...</p>
+          <p className="font-mono text-xs text-gray-500">[INFO] Cargando publicaciones de Instagram...</p>
         </div>
       )}
-      {/* </CHANGE> */}
     </div>
   )
 
   const renderResultsStep = () => (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-center gap-2 text-green-600 font-bold text-xl">
-        <CheckCircle size={24} /> Analysis Complete
+        <CheckCircle size={24} /> Análisis Completo
       </div>
       {profileData && renderProfileCard(profileData)}
-      {randomizedResults.length > 0 && (
-        <div className="p-3 bg-gray-100 border border-gray-300 rounded-lg font-mono text-sm text-left">
+
+      {randomizedResults.length >= 3 && (
+        <div className="bg-orange-50 border-2 border-orange-500 text-orange-800 p-4 rounded-lg mt-5">
           <p>
-            <span className="text-green-600 font-bold">[SYSTEM_LOG]</span> New activity detected:
+            <span className="text-green-600 font-bold">[REGISTRO_SISTEMA]</span> Nueva actividad detectada:
           </p>
           <p className="ml-4">
-            <span className="text-blue-600">[INSTAGRAM]</span> {randomizedResults[0].username} liked your photo.
+            <span className="text-blue-600">[INSTAGRAM]</span> {randomizedResults[0].username} le gustó tu foto.
           </p>
           <p className="ml-4">
-            <span className="text-blue-600">[INSTAGRAM]</span> New message from{" "}
+            <span className="text-blue-600">[INSTAGRAM]</span> Nuevo mensaje de{" "}
             {randomizedResults[1]?.username || randomizedResults[0].username}.
           </p>
         </div>
@@ -557,9 +559,9 @@ export default function Step2() {
                 <div className="flex-1 text-sm">
                   <p className="text-gray-800">
                     <span className="font-semibold">{randomizedResults[i].username}</span>{" "}
-                    {i < 2 ? "liked your photo" : "sent you a message"}
+                    {i < 2 ? "le gustó tu foto" : "te envió un mensaje"}
                   </p>
-                  <p className="text-gray-500 text-xs">{[1, 2, 5][i]} minutes ago</p>
+                  <p className="text-gray-500 text-xs">hace {[1, 2, 5][i]} minutos</p>
                 </div>
                 {i < 2 ? (
                   <Heart className="text-pink-500" size={20} />
@@ -574,9 +576,9 @@ export default function Step2() {
           <img src={profileImageUrl || ""} alt="Target Avatar" className="w-10 h-10 rounded-full object-cover" />
           <div className="flex-1 text-sm">
             <p className="text-gray-800">
-              <span className="font-semibold">{instagramHandle}</span> is typing...
+              <span className="font-semibold">{instagramHandle}</span> está escribiendo...
             </p>
-            <p className="text-gray-500 text-xs">Just now</p>
+            <p className="text-gray-500 text-xs">Justo ahora</p>
           </div>
           <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse ml-auto"></span>
         </div>
@@ -584,16 +586,16 @@ export default function Step2() {
           <img src={profileImageUrl || ""} alt="Target Avatar" className="w-10 h-10 rounded-full object-cover" />
           <div className="flex-1 text-sm">
             <p className="text-gray-800">
-              <span className="font-semibold">{instagramHandle}</span> sent a new message.
+              <span className="font-semibold">{instagramHandle}</span> envió un nuevo mensaje.
             </p>
-            <p className="text-gray-500 text-xs">1 minute ago</p>
+            <p className="text-gray-500 text-xs">hace 1 minuto</p>
           </div>
           <MessageCircle className="text-blue-500 ml-auto" size={20} />
         </div>
       </div>
       <div className="space-y-5 text-left">
         <h2 className="text-xl font-bold text-black text-center">
-          <span className="text-red-600">INTERCEPTED:</span> Suspicious Likes from {instagramHandle}
+          <span className="text-red-600">INTERCEPTADO:</span> Likes Sospechosos de {instagramHandle}
         </h2>
         {interceptedImages.map((item, index) => (
           <div key={index} className="p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -609,7 +611,7 @@ export default function Step2() {
             </div>
             <div className="flex items-center gap-2 mt-2">
               <Heart size={16} className="text-pink-500" />
-              <span className="text-sm text-gray-600">{index % 2 === 0 ? "1.2K" : "876"} likes</span>
+              <span className="text-sm text-gray-600">{index % 2 === 0 ? "1.2K" : "876"} me gusta</span>
             </div>
             <div className="flex items-center gap-3 mt-2">
               <img src={profileImageUrl || ""} alt="User" className="w-8 h-8 rounded-full object-cover" />
@@ -620,71 +622,76 @@ export default function Step2() {
           </div>
         ))}
       </div>
-      <div className="bg-white p-5 rounded-lg shadow-xl text-center mt-8">
-        <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-cyan-500 flex items-center justify-center mb-4">
+
+      <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-500 p-6 rounded-lg text-center shadow-lg">
+        <div className="bg-gradient-to-br from-yellow-400 to-orange-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
           <LockOpen className="text-white" size={40} />
         </div>
         <h2 className="text-xl font-bold text-gray-800">
-          <span className="text-yellow-600">🔓</span> UNLOCK COMPLETE REPORT
+          <span className="text-yellow-600">🔓</span> DESBLOQUEAR INFORME COMPLETO
         </h2>
         <p className="text-gray-600 mt-1 mb-6">
-          Get instant access to the full report with uncensored photos and complete conversation history.
+          Obtén acceso instantáneo al informe completo con fotos sin censurar e historial completo de conversaciones.
         </p>
         <div className="bg-red-100 border-2 border-red-500 text-red-800 p-4 rounded-lg mt-5">
           <div className="flex items-center justify-center gap-2">
             <AlertTriangle className="text-red-600" />
-            <h3 className="font-bold">THE REPORT WILL BE DELETED IN:</h3>
+            <h3 className="font-bold">EL INFORME SERÁ ELIMINADO EN:</h3>
           </div>
           <p className="text-4xl font-mono font-bold my-1 text-red-600">{formatTime(timeLeft)}</p>
           <p className="text-xs text-red-700">
-            After the time expires, this report will be permanently deleted for privacy reasons. This offer cannot be
-            recovered at a later date.
+            Después de que expire el tiempo, este informe será eliminado permanentemente por razones de privacidad. Esta
+            oferta no puede ser recuperada en una fecha posterior.
           </p>
         </div>
 
-        {/* --- MAIN BUTTON AND PRICE --- */}
         <a
           href="https://pay.hotmart.com/T101928947F?checkoutMode=10"
           className="mt-6 block w-full bg-green-500 hover:bg-green-600 text-white font-bold text-lg py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
         >
-          🔓 YES, I WANT THE COMPLETE REPORT
+          🔓 SÍ, QUIERO EL INFORME COMPLETO
         </a>
         <div className="mt-4 text-center">
           <p className="text-gray-500">
-            From <span className="line-through">$79</span> for only
+            De <span className="line-through">$79</span> por solo
           </p>
           <p className="text-4xl font-bold text-green-600">$37</p>
-          <p className="text-xs text-gray-400 mt-1">(One-Time Payment)</p>
+          <p className="text-xs text-gray-400 mt-1">(Pago Único)</p>
         </div>
 
-        {/* --- TRUST & GUARANTEE AREA (All Translated) --- */}
         <div className="mt-8 border-t pt-6">
-          {/* 1. Social Proof */}
           <div className="flex items-center justify-center gap-2 text-yellow-500">
             <span>★★★★★</span>
             <span className="text-gray-600 font-medium text-sm">4.9/5.0</span>
           </div>
-          <p className="text-sm text-gray-500 mt-1">Based on 15,783 satisfied customers.</p>
+          <p className="text-sm text-gray-500 mt-1">Basado en 15,783 clientes satisfechos.</p>
 
-          {/* 2. Guarantee */}
           <div className="mt-6 flex items-center justify-center gap-3 bg-gray-50 p-3 rounded-lg">
             <img src="/images/design-mode/guarantee.png" alt="Guarantee Seal" className="h-12 w-12 opacity-70" />
             <div>
-              <h4 className="font-bold text-gray-800 text-left">7-Day Guarantee</h4>
+              <h4 className="font-bold text-gray-800 text-left">Garantía de 7 Días</h4>
               <p className="text-xs text-gray-600 text-left">
-                Your satisfaction or your money back. Zero risk for you.
+                Tu satisfacción o te devolvemos tu dinero. Cero riesgo para ti.
               </p>
             </div>
           </div>
 
-          {/* 3. Security Seals */}
-          <div className="mt-4">
-            <p className="text-xs text-gray-400 mb-2">100% Secure Checkout</p>
-            <img
-              src="/images/secure-payment-badge2.png"
-              alt="Secure Payment Badges"
-              className="mx-auto h-6 opacity-80"
-            />
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <ShieldCheck className="text-green-600" size={28} />
+            <div className="text-left">
+              <h4 className="font-bold text-gray-800">Pago Seguro y Encriptado</h4>
+              <p className="text-xs text-gray-600">Protegido por encriptación SSL de 256 bits.</p>
+            </div>
+          </div>
+
+          <div className="mt-6 flex items-center justify-center gap-3 bg-blue-50 p-3 rounded-lg">
+            <Lock className="text-blue-600" size={28} />
+            <div className="text-left">
+              <h4 className="font-bold text-gray-800">100% Privado y Discreto</h4>
+              <p className="text-xs text-gray-600">
+                Tu investigación permanece completamente anónima. Sin rastros, sin registros.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -702,7 +709,7 @@ export default function Step2() {
         </div>
       </main>
       <footer className="py-4 mt-4">
-        <p className="text-xs text-white">© 2024. All rights reserved.</p>
+        <p className="text-xs text-white">© 2025. Todos los derechos reservados.</p>
       </footer>
     </div>
   )

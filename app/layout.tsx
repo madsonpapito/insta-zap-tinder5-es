@@ -9,7 +9,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <head>
         <GoogleTagManager gtmId="GTM-MC8QD7T9" />
         <Script
