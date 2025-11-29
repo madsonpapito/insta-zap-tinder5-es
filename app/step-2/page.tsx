@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Input } from "@/components/ui/input"
-import { User, CheckCircle, Heart, MessageCircle, Lock, AlertTriangle, Wifi, LockOpen } from "lucide-react"
+import { User, CheckCircle, Heart, MessageCircle, Lock, AlertTriangle, Wifi, Instagram, Whatsapp, Tinder LockOpen } from "lucide-react"
 
 // ==========================================================
 // DADOS DOS PERFIS E IMAGENS
@@ -109,7 +109,8 @@ const getProfileFromCache = (user: string): any | null => {
 const PageHeader = () => (
   <header className="w-full max-w-md mx-auto text-center px-4 pt-12 pb-8">
     <div className="inline-block bg-white p-4 rounded-2xl shadow-lg mb-6">
-      <Wifi className="h-10 w-10 text-indigo-500" />
+      {/* 2. Substituí Wifi por Instagram e ajustei a cor para rosa */}
+      <Instagram className="h-10 w-10 text-pink-600" />
     </div>
     <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
       <span role="img" aria-label="magnifying glass">
