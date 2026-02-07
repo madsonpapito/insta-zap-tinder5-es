@@ -1,10 +1,6 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/api/location/route": "app/api/location/route.js",
   "/page": "app/page.js",
   "/step-2/page": "app/step-2/page.js",
-  "/initpage2/page": "app/initpage2/page.js",
-  "/step-1-v3/page": "app/step-1-v3/page.js",
-  "/u1/page": "app/u1/page.js",
-  "/u2/page": "app/u2/page.js"
+  "/u1/page": "app/u1/page.js"
 }
