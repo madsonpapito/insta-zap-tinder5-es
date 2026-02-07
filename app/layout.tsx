@@ -17,6 +17,31 @@ export default function RootLayout({
           src="https://app.monetizze.com.br/upsell_incorporado.php"
           strategy="beforeInteractive"
         />
+        <Script id="utmify-pixels-init" strategy="afterInteractive">
+          {`
+            window.pixelId = "692dffaa44e0d147a3883c6f";
+            window.tikTokPixelId = "697249119845bf717d1cb094";
+            window.googlePixelId = "69725247a061f2cfc7338f19";
+          `}
+        </Script>
+        <Script
+          src="https://cdn.utmify.com.br/scripts/pixel/pixel.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://cdn.utmify.com.br/scripts/pixel/pixel-google.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+          strategy="afterInteractive"
+          data-utmify-prevent-xcod-sck=""
+          data-utmify-prevent-subids=""
+        />
       </head>
       <body>{children}</body>
     </html>
