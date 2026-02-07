@@ -129,7 +129,7 @@ const LIKED_BY_FEMALE_STORIES = [
 ]
 // Array de comentarios para la sección "INTERCEPTADO" - según el género del objetivo
 // Si el objetivo es masculino, los comentarios vienen de mujeres (para él)
-const INTERCEPTED_COMMENTS_MALE_TARGET = [
+const INTERCEPTED_COMMENTS_FEMALE_TARGET = [
   "Wow, estás muy bueno 🥰",
   "🫣😏",
   "Me estoy excitando 🥵",
@@ -138,7 +138,7 @@ const INTERCEPTED_COMMENTS_MALE_TARGET = [
   "Eres irresistible 🔥",
 ]
 // Si el objetivo es femenino, los comentarios vienen de hombres (para ella)
-const INTERCEPTED_COMMENTS_FEMALE_TARGET = [
+const INTERCEPTED_COMMENTS_MALE_TARGET = [
   "Wow, estás muy buena 🥰",
   "🫣😏",
   "Me estoy excitando 🥵",
