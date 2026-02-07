@@ -1,9 +1,7 @@
 "use client"
 
-import { LegalFooter } from "@/components/legal-footer"
-import { Check, ShieldCheck, Lock, Eye, BookOpen, MessageCircle } from "lucide-react"
-import Link from "next/link"
-import { FacebookTracker } from "@/components/FacebookTracker"
+import { CheckCircle, Eye, Shield, Book, Users, LogOut, ArrowRight } from "lucide-react";
+import { FacebookTracker } from "@/components/FacebookTracker";
 
 export default function InitPage() {
     return (
@@ -20,144 +18,154 @@ export default function InitPage() {
             <section className="bg-white pt-20 pb-16 px-4 md:px-8 shadow-sm">
                 <div className="max-w-4xl mx-auto text-center space-y-8">
                     <div className="inline-block bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-4 tracking-wide uppercase">
-                        Discover the Truth
+                        Descubre la Verdad
                     </div>
                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
-                        Is Your Partner Hiding Something? <br className="hidden md:block" />
-                        <span className="text-blue-600">Learn to Read the Signs.</span>
+                        ¿Tu Pareja Está Ocultando Algo? <br className="hidden md:block" />
+                        <span className="text-blue-600">Aprende a Leer las Señales.</span>
                     </h1>
-                    <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                        The proven method to identify lies through body language and behavioral psychology. Reclaim your peace of mind today.
+                    <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
+                        Tu intuición te dice que algo está mal. Ahora, aprende a ver lo que intentan ocultar—desde el lenguaje corporal sutil hasta las huellas digitales que no pueden borrar.
                     </p>
+                    <a href="https://pay.hotmart.com/L99128570N?checkoutMode=10&bid=1739354809098" className="inline-flex items-center gap-2 bg-blue-600 text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-blue-700 transition-colors shadow-lg">
+                        QUIERO DESCUBRIR LA VERDAD <ArrowRight className="h-5 w-5" />
+                    </a>
+                    <p className="text-sm text-slate-500">Acceso digital instantáneo. Descarga inmediata.</p>
+                </div>
+            </section>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-8">
-                        <Link
-                            href="https://pay.mycheckoutt.com/019bc3ae-63ca-7242-97fd-5ca7d86778fd?ref="
-                            className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
-                        >
-                            Get Access Now For $37
-                        </Link>
+            {/* Problem Agitation Section */}
+            <section className="py-16 px-4 md:px-8 bg-slate-100">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-bold text-center mb-12">¿Por Qué No Puedes Dejar de Pensar en Ello?</h2>
+                    <div className="space-y-6 text-slate-700 text-lg leading-relaxed">
+                        <p>
+                            Te despierta a las 3 de la mañana. La extraña distancia en sus ojos. Las &quot;noches de trabajo&quot; que no tienen sentido. Su teléfono siempre boca abajo, con una nueva contraseña.
+                        </p>
+                        <p>
+                            Le preguntaste directamente, y te hicieron sentir loca. &quot;Solo estás siendo paranoica,&quot; dijeron. La duda te consume porque <strong className="text-slate-900">algo ha cambiado,</strong> y ambos lo saben.
+                        </p>
+                        <p className="text-slate-900 font-semibold text-xl pt-4">
+                            Lo peor no es la posible traición. Es el <span className="text-red-600">no saber.</span>
+                        </p>
                     </div>
-                    <p className="text-sm text-slate-400 mt-4 flex items-center justify-center gap-2">
-                        <ShieldCheck className="w-4 h-4" /> 100% Safe and Discrete Purchase
+                </div>
+            </section>
+
+            {/* Solution Intro Section */}
+            <section className="py-16 px-4 md:px-8 bg-white">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6">Tu Intuición Es Correcta. Ahora Necesitas los Hechos.</h2>
+                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                        El método <strong>&quot;Leyendo las Señales&quot;</strong> te da el conocimiento para ver más allá de las mentiras. Combina el análisis del lenguaje corporal con técnicas de investigación digital usadas por expertos para detectar comportamientos ocultos.
                     </p>
                 </div>
             </section>
 
-            {/* Benefits Grid */}
-            <section className="py-20 px-4 md:px-8 bg-slate-50">
-                <div className="max-w-6xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold text-slate-900">What You Will Learn</h2>
-                        <p className="text-slate-600 mt-4 text-lg">Advanced techniques simplified for immediate application.</p>
+            {/* What's Inside Section */}
+            <section className="py-16 px-4 md:px-8 bg-slate-50">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-bold text-center mb-12">Lo Que Aprenderás</h2>
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="bg-white p-6 rounded-xl shadow-sm flex gap-4">
+                            <div className="flex-shrink-0 bg-blue-100 p-3 rounded-full h-fit">
+                                <Eye className="h-6 w-6 text-blue-600" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-lg mb-1">Descodificando el Lenguaje Corporal</h3>
+                                <p className="text-slate-600 text-sm">Las 7 micro-expresiones que revelan mentiras, sin importar cuán buenos crean que son mintiendo.</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm flex gap-4">
+                            <div className="flex-shrink-0 bg-blue-100 p-3 rounded-full h-fit">
+                                <Shield className="h-6 w-6 text-blue-600" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-lg mb-1">Señales de Alerta de Distancia Emocional</h3>
+                                <p className="text-slate-600 text-sm">Reconoce los cambios sutiles en el comportamiento que señalan que su mente está en otra persona.</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm flex gap-4">
+                            <div className="flex-shrink-0 bg-blue-100 p-3 rounded-full h-fit">
+                                <Book className="h-6 w-6 text-blue-600" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-lg mb-1">Patrones Detectivos en Conversaciones</h3>
+                                <p className="text-slate-600 text-sm">Cómo hacer preguntas que hacen que los mentirosos se tropiecen con sus propias historias.</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm flex gap-4">
+                            <div className="flex-shrink-0 bg-blue-100 p-3 rounded-full h-fit">
+                                <Users className="h-6 w-6 text-blue-600" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-lg mb-1">El Marco de Observación de Amigos</h3>
+                                <p className="text-slate-600 text-sm">Sus amigos a menudo saben. Aprende a leer sus reacciones incómodas cuando surge el tema.</p>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </section>
 
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {/* Benefit 1 */}
-                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6">
-                                <Eye className="w-6 h-6" />
-                            </div>
-                            <h3 className="text-xl font-bold mb-3">Body Language Reading</h3>
-                            <p className="text-slate-600 leading-relaxed">
-                                Identify micro-expressions and involuntary gestures that reveal lies and omissions in seconds.
-                            </p>
+            {/* Credibility / Trust Bar */}
+            <section className="py-12 px-4 bg-slate-800 text-white">
+                <div className="max-w-4xl mx-auto flex flex-wrap justify-center items-center gap-x-12 gap-y-4 text-center">
+                    <div className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-400" />
+                        <span className="font-semibold">Más de 12,000 Lectores</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-400" />
+                        <span className="font-semibold">Basado en Estudios de Comportamiento</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-400" />
+                        <span className="font-semibold">Descarga Digital Instantánea</span>
+                    </div>
+                </div>
+            </section>
+
+            {/* Transformation Section */}
+            <section className="py-16 px-4 md:px-8 bg-white">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h2 className="text-3xl font-bold mb-8">Deja de Sentirte Impotente. Empieza a Ver Claramente.</h2>
+                    <div className="grid md:grid-cols-2 gap-6 text-left">
+                        <div className="bg-red-50 border border-red-100 p-6 rounded-xl">
+                            <h3 className="font-bold text-red-700 mb-3 flex items-center gap-2"><LogOut className="h-5 w-5" /> Antes</h3>
+                            <ul className="space-y-2 text-slate-700 text-sm">
+                                <li>• Ansiedad constante y noches sin dormir.</li>
+                                <li>• Sintiendo que te estás volviendo &quot;loca.&quot;</li>
+                                <li>• Sin idea de qué buscar.</li>
+                                <li>• Preguntando directamente y sin obtener nada.</li>
+                            </ul>
                         </div>
-
-                        {/* Benefit 2 */}
-                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6">
-                                <MessageCircle className="w-6 h-6" />
-                            </div>
-                            <h3 className="text-xl font-bold mb-3">Conversation Techniques</h3>
-                            <p className="text-slate-600 leading-relaxed">
-                                Know exactly what questions to ask and how to analyze answers to uncover the truth without aggressive confrontation.
-                            </p>
-                        </div>
-
-                        {/* Benefit 3 */}
-                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6">
-                                <BookOpen className="w-6 h-6" />
-                            </div>
-                            <h3 className="text-xl font-bold mb-3">Couples Reconnection</h3>
-                            <p className="text-slate-600 leading-relaxed">
-                                It's not just about uncovering lies. Learn techniques to rekindle the flame and rebuild trust if that is your desire.
-                            </p>
+                        <div className="bg-green-50 border border-green-100 p-6 rounded-xl">
+                            <h3 className="font-bold text-green-700 mb-3 flex items-center gap-2"><CheckCircle className="h-5 w-5" /> Después</h3>
+                            <ul className="space-y-2 text-slate-700 text-sm">
+                                <li>• Claridad y control sobre la situación.</li>
+                                <li>• Sabiendo exactamente qué señales buscar.</li>
+                                <li>• Confianza para confrontar con hechos, no sospechas.</li>
+                                <li>• Paz mental—sea cual sea el resultado.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Content Breakdown Section */}
-            <section className="py-20 px-4 md:px-8 bg-white">
-                <div className="max-w-4xl mx-auto bg-slate-50 rounded-3xl p-8 md:p-12 border border-slate-100">
-                    <h2 className="text-3xl font-bold text-center mb-10">Training Content</h2>
-                    <div className="space-y-4">
-                        {[
-                            "Module 1: The fundamentals of lying and how the brain reacts.",
-                            "Module 2: Reading eyes, hands, and posture – The body speaks.",
-                            "Module 3: Analyzing text messages and online behavior.",
-                            "Module 4: The Truth Method – How to confront safely.",
-                            "Bonus: Guide to Rebuilding Trust and Intimacy."
-                        ].map((item, index) => (
-                            <div key={index} className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
-                                <div className="bg-green-100 text-green-600 p-1 rounded-full mt-0.5">
-                                    <Check className="w-4 h-4" />
-                                </div>
-                                <p className="text-slate-700 font-medium">{item}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="py-20 px-4 md:px-8 bg-gradient-to-br from-blue-600 to-blue-800 text-white text-center">
-                <div className="max-w-3xl mx-auto space-y-8">
-                    <h2 className="text-3xl md:text-5xl font-bold">Stop Living in Doubt.</h2>
-                    <p className="text-blue-100 text-lg md:text-xl">
-                        Get immediate access to all content and discover the truth today. Unconditional 7-day guarantee.
+            {/* Final CTA Section */}
+            <section className="py-20 px-4 md:px-8 bg-gradient-to-b from-slate-100 to-slate-200">
+                <div className="max-w-3xl mx-auto text-center">
+                    <h2 className="text-3xl md:text-4xl font-extrabold mb-4">La Verdad Te Liberará.</h2>
+                    <p className="text-lg text-slate-600 mb-8">
+                        Termina con la incertidumbre. Obtén el marco que necesitas para ver la realidad de tu relación.
                     </p>
-                    <div className="flex flex-col items-center gap-4">
-                        <Link
-                            href="https://pay.mycheckoutt.com/019bc3ae-63ca-7242-97fd-5ca7d86778fd?ref="
-                            className="bg-white text-blue-700 hover:bg-slate-100 text-lg font-bold py-4 px-10 rounded-xl shadow-lg transition-all transform hover:-translate-y-1 w-full md:w-auto"
-                        >
-                            Yes! I Want Immediate Access
-                        </Link>
-                        <div className="flex items-center gap-2 text-sm text-blue-200 opacity-90">
-                            <Lock className="w-4 h-4" /> Secure Payment via Kirvano
-                        </div>
-                    </div>
+                    <a href="https://pay.hotmart.com/L99128570N?checkoutMode=10&bid=1739354809098" className="inline-flex items-center gap-2 bg-blue-600 text-white font-bold py-4 px-10 rounded-full text-xl hover:bg-blue-700 transition-colors shadow-xl">
+                        ACCEDER A &quot;LEYENDO LAS SEÑALES&quot; AHORA <ArrowRight className="h-6 w-6" />
+                    </a>
+                    <p className="text-sm text-slate-500 mt-4">Pago seguro y único. Acceso de por vida.</p>
                 </div>
             </section>
 
-            {/* FAQ Section */}
-            <section className="py-20 px-4 md:px-8 bg-slate-50">
-                <div className="max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-bold text-center mb-12 text-slate-900">Frequently Asked Questions</h2>
-                    <div className="space-y-6">
-                        {/* FAQ Item 1 */}
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                            <h3 className="font-bold text-lg mb-2 text-slate-800">Is it safe to buy?</h3>
-                            <p className="text-slate-600">Yes, 100% safe. The payment is processed by Kirvano, one of the most secure platforms. Your data is protected.</p>
-                        </div>
-                        {/* FAQ Item 2 */}
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                            <h3 className="font-bold text-lg mb-2 text-slate-800">How do I get access?</h3>
-                            <p className="text-slate-600">Immediately after payment confirmation, you will receive an email with your login and password to access the member area.</p>
-                        </div>
-                        {/* FAQ Item 3 */}
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                            <h3 className="font-bold text-lg mb-2 text-slate-800">Does it work for any relationship?</h3>
-                            <p className="text-slate-600">Yes. The body language and psychology techniques are universal and work regardless of the length of the relationship.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <LegalFooter />
         </div>
-    )
+    );
 }

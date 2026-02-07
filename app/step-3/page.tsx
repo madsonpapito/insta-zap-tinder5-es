@@ -28,7 +28,7 @@ export default function Step3() {
   // Estados para dados vindos do Step 2
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
-  const [location, setLocation] = useState<string>("Detecting location...")
+  const [location, setLocation] = useState<string>("Detectando ubicación...")
   const [instagramUsername, setInstagramUsername] = useState<string | null>(null)
   const [instagramPosts, setInstagramPosts] = useState<InstagramPost[]>([])
   const [loadingPosts, setLoadingPosts] = useState(false)
@@ -47,10 +47,10 @@ export default function Step3() {
     const storedPhoto = localStorage.getItem("profilePhoto")
     const storedProfileData = localStorage.getItem("igProfileCacheV1")
 
-    setPhoneNumber(storedPhone || "Number not found")
+    setPhoneNumber(storedPhone || "Número no encontrado")
     setProfilePhoto(
       storedPhoto ||
-        "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=",
+      "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=",
     )
 
     if (storedProfileData) {
@@ -78,10 +78,10 @@ export default function Step3() {
         if (!response.ok) throw new Error("Failed to fetch location from internal API")
         const data = await response.json()
 
-        setLocation(data.city || "Unknown Location")
+        setLocation(data.city || "Ubicación Desconocida")
       } catch (error) {
         console.error("[v0] Location fetch error:", error)
-        setLocation("Your Location")
+        setLocation("Tu Ubicación")
       }
     }
 
@@ -123,13 +123,13 @@ export default function Step3() {
 
   const steps: ProgressStep[] = useMemo(
     () => [
-      { id: "initiating", text: "Initiating connection to Instagram servers...", status: "pending" },
-      { id: "checking", text: "Checking profile availability...", status: "pending" },
-      { id: "found", text: "Profile found! Validating metadata...", status: "pending" },
-      { id: "analyzing", text: "Analyzing recent mentions and interactions...", status: "pending" },
-      { id: "searching", text: "Searching for archived stories and screenshots...", status: "pending" },
-      { id: "mapping", text: "Mapping conversation patterns in Direct...", status: "pending" },
-      { id: "complete", text: "Synchronization completed successfully.", status: "pending" },
+      { id: "initiating", text: "Iniciando conexión con servidores de Instagram...", status: "pending" },
+      { id: "checking", text: "Verificando disponibilidad del perfil...", status: "pending" },
+      { id: "found", text: "¡Perfil encontrado! Validando metadatos...", status: "pending" },
+      { id: "analyzing", text: "Analizando menciones e interacciones recientes...", status: "pending" },
+      { id: "searching", text: "Buscando historias archivadas y capturas de pantalla...", status: "pending" },
+      { id: "mapping", text: "Mapeando patrones de conversación en Direct...", status: "pending" },
+      { id: "complete", text: "Sincronización completada exitosamente.", status: "pending" },
     ],
     [],
   )
@@ -236,8 +236,8 @@ export default function Step3() {
                 )}
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800 text-lg mb-1">WhatsApp Profile</h3>
-                <p className="text-gray-600 mb-2">{phoneNumber || "Loading number..."}</p>
+                <h3 className="font-semibold text-gray-800 text-lg mb-1">Perfil de WhatsApp</h3>
+                <p className="text-gray-600 mb-2">{phoneNumber || "Cargando número..."}</p>
                 <div className="flex items-center justify-center gap-1.5 text-green-600 text-sm">
                   <MapPin className="h-4 w-4" />
                   <span>{location}</span>
@@ -252,8 +252,8 @@ export default function Step3() {
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-700 font-medium text-sm">
-                      <span className="text-green-600 font-mono">[SCANNING]</span>{" "}
-                      {currentSteps[currentStepIndex]?.text || "Connecting..."}
+                      <span className="text-green-600 font-mono">[ESCANEANDO]</span>{" "}
+                      {currentSteps[currentStepIndex]?.text || "Conectando..."}
                     </span>
                     <span className="text-green-600 font-bold text-sm">{Math.round(progress)}%</span>
                   </div>
@@ -296,9 +296,8 @@ export default function Step3() {
                   {currentSteps.slice(0, visibleSteps).map((step, index) => (
                     <div
                       key={step.id}
-                      className={`flex items-start gap-3 text-sm transition-all duration-500 ${
-                        index < visibleSteps ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-                      }`}
+                      className={`flex items-start gap-3 text-sm transition-all duration-500 ${index < visibleSteps ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                        }`}
                     >
                       <div className="flex-shrink-0 w-4 h-4 mt-0.5">
                         {step.status === "loading" ? (
@@ -310,13 +309,12 @@ export default function Step3() {
                         )}
                       </div>
                       <span
-                        className={`transition-colors duration-300 ${
-                          step.status === "completed"
+                        className={`transition-colors duration-300 ${step.status === "completed"
                             ? "text-green-600 font-medium"
                             : step.status === "loading"
                               ? "text-blue-600 font-medium"
                               : "text-gray-600"
-                        }`}
+                          }`}
                       >
                         {step.text}
                       </span>
@@ -328,13 +326,13 @@ export default function Step3() {
               // Estado Completo
               <div className="text-center py-4 border-t border-gray-200 mt-6">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Synchronization Complete!</h3>
-                <p className="text-gray-600 mb-6">Your private access has been successfully established.</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">¡Sincronización Completa!</h3>
+                <p className="text-gray-600 mb-6">Tu acceso privado ha sido establecido exitosamente.</p>
                 <Button
                   onClick={handleViewReport}
                   className="w-full h-12 bg-green-500 hover:bg-green-600 text-white text-lg font-medium rounded-lg"
                 >
-                  View Full Report Now
+                  Ver Informe Completo Ahora
                 </Button>
               </div>
             )}
@@ -345,16 +343,16 @@ export default function Step3() {
         <footer className="w-full max-w-md text-center py-4">
           <div className="flex justify-center space-x-6 text-sm mb-3">
             <Link href="#" className="text-gray-500 hover:text-blue-500">
-              Privacy Policy
+              Política de Privacidad
             </Link>
             <Link href="#" className="text-gray-500 hover:text-blue-500">
-              Terms of Use
+              Términos de Uso
             </Link>
             <Link href="#" className="text-gray-500 hover:text-blue-500">
-              Email Support
+              Soporte por Email
             </Link>
           </div>
-          <p className="text-gray-400 text-xs">© 2025 Protect Your Relationship. All rights reserved.</p>
+          <p className="text-gray-400 text-xs">© 2025 Protege Tu Relación. Todos los derechos reservados.</p>
         </footer>
       </div>
 

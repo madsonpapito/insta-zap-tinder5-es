@@ -1,188 +1,456 @@
 "use client"
-import { useState, useEffect, useCallback, useMemo } from "react"
-import Script from "next/script"
-import useEmblaCarousel from "embla-carousel-react"
-import Autoplay from "embla-carousel-autoplay"
-import { Zap, AlertTriangle, Flame, Lock, Camera, ChevronLeft, ChevronRight, CheckCircle, Users, MapPin, X, Loader2, Search } from "lucide-react"
-import { useFacebookTracking } from '@/hooks/useFacebookTracking'
 
+import Image from "next/image"
+import { useState, useEffect } from "react"
+import {
+  Camera,
+  Shield,
+  Check,
+  AlertTriangle,
+  Clock,
+  Lock,
+  User,
+  Search,
+  Heart,
+  X,
+  Flame
+} from "lucide-react"
+import { useRouter } from "next/navigation"
 
-// --- DEFINIÇÃO DE TIPO E DADOS DOS MATCHES ---
-interface Match { name: string; age: number; lastSeen: string; avatar: string; verified: boolean; identity: string; location: string; distance: string; bio: string; zodiac: string; mbti: string; passion: string; interests: string[]; }
+// Simulated match data
+const potentialMatches = [
+  { id: 1, name: "Perfil Coincidente #1", age: 28, distance: "3 km", image: "/images/71.jpg", matchScore: 94 },
+  { id: 2, name: "Perfil Coincidente #2", age: 31, distance: "7 km", image: "/images/72.jpg", matchScore: 87 },
+  { id: 3, name: "Perfil Coincidente #3", age: 26, distance: "12 km", image: "/images/73.jpg", matchScore: 82 },
+]
 
-const defaultMatchesData: Omit<Match, 'location'>[] = [
-  { name: "Mila", age: 26, lastSeen: "6h ago", avatar: "/images/male/tinder/5.jpg", verified: true, identity: "Bisexual", distance: "2 km", bio: "Part dreamer, part doer, all about good vibes. Ready to make some memories?", zodiac: "Virgo", mbti: "KU", passion: "Coffee", interests: ["Hiking", "Green Living", "Live Music", "Pottery"] },
-  { name: "John", age: 25, lastSeen: "4h ago", avatar: "/images/female/tinder/5.jpg", verified: true, identity: "Bisexual", distance: "2 km", bio: "Half adrenaline junkie, half cozy blanket enthusiast. What’s your vibe?", zodiac: "Leo", mbti: "BU", passion: "Fitness", interests: ["Meditation", "Books", "Wine", "Music"] },
-  { name: "Harper", age: 21, lastSeen: "3h ago", avatar: "/images/male/tinder/3.jpg", verified: false, identity: "Woman", distance: "5 km", bio: "Just a girl who loves sunsets and long walks on the beach. Looking for someone to share adventures with.", zodiac: "Leo", mbti: "UVA", passion: "Yoga", interests: ["Travel", "Photography", "Podcasts"] },
-  { name: "Will", age: 23, lastSeen: "2h ago", avatar: "/images/female/tinder/3.jpg", verified: true, identity: "Man", distance: "8 km", bio: "Fluent in sarcasm and movie quotes. Let's find the best pizza place in town.", zodiac: "Gemini", mbti: "OHY", passion: "Baking", interests: ["Concerts", "Netflix", "Dogs"] },
-];
-const femaleMatchesData: Omit<Match, 'location'>[] = [
-  { name: "Elizabeth", age: 24, lastSeen: "1h ago", avatar: "/images/male/tinder/1.jpg", verified: true, identity: "Woman", distance: "3 km", bio: "Seeking new adventures and a great cup of coffee. Let's explore the city together.", zodiac: "Aries", mbti: "ENFP", passion: "Traveling", interests: ["Art", "History", "Podcasts"] },
-  { name: "Victoria", age: 27, lastSeen: "5h ago", avatar: "/images/male/tinder/2.jpg", verified: false, identity: "Woman", distance: "1 km", bio: "Bookworm and aspiring chef. Tell me about the last great book you read.", zodiac: "Taurus", mbti: "ISFJ", passion: "Cooking", interests: ["Reading", "Yoga", "Documentaries"] },
-  { name: "Charlotte", age: 22, lastSeen: "Online", avatar: "/images/male/tinder/3.jpg", verified: true, identity: "Woman", distance: "6 km", bio: "Lover of live music and spontaneous road trips. What's our first destination?", zodiac: "Sagittarius", mbti: "ESFP", passion: "Music", interests: ["Concerts", "Photography", "Hiking"] },
-  { name: "Emily", age: 25, lastSeen: "3h ago", avatar: "/images/male/tinder/4.jpg", verified: true, identity: "Woman", distance: "4 km", bio: "Fitness enthusiast who's equally happy on the couch with a good movie.", zodiac: "Virgo", mbti: "ISTJ", passion: "Fitness", interests: ["Movies", "Healthy Eating", "Dogs"] },
-  { name: "Grace", age: 28, lastSeen: "8h ago", avatar: "/images/male/tinder/5.jpg", verified: false, identity: "Woman", distance: "7 km", bio: "Creative soul with a love for painting and poetry. Looking for meaningful conversations.", zodiac: "Pisces", mbti: "INFP", passion: "Art", interests: ["Museums", "Writing", "Coffee Shops"] },
-  { name: "Olivia", age: 23, lastSeen: "2h ago", avatar: "/images/male/tinder/6.jpg", verified: true, identity: "Woman", distance: "2 km", bio: "Sarcasm is my second language. Let's find the best taco spot in town.", zodiac: "Gemini", mbti: "ENTP", passion: "Comedy", interests: ["Foodie", "Travel", "Stand-up"] },
-];
-const maleMatchesData: Omit<Match, 'location'>[] = [
-  { name: "William", age: 26, lastSeen: "Online", avatar: "/images/female/tinder/1.jpg", verified: true, identity: "Man", distance: "2 km", bio: "Engineer by day, musician by night. Let's talk about tech and tunes.", zodiac: "Capricorn", mbti: "INTJ", passion: "Guitar", interests: ["Technology", "Live Music", "Brewing"] },
-  { name: "James", age: 29, lastSeen: "4h ago", avatar: "/images/female/tinder/2.jpg", verified: true, identity: "Man", distance: "5 km", bio: "Outdoors enthusiast looking for someone to hike with. My dog will probably like you.", zodiac: "Leo", mbti: "ESTP", passion: "Hiking", interests: ["Camping", "Dogs", "Bonfires"] },
-  { name: "Henry", age: 25, lastSeen: "1h ago", avatar: "/images/female/tinder/3.jpg", verified: false, identity: "Man", distance: "3 km", bio: "Film buff and history nerd. Can recommend a movie for any mood.", zodiac: "Cancer", mbti: "INFJ", passion: "Movies", interests: ["History", "Reading", "Chess"] },
-  { name: "Oliver", age: 27, lastSeen: "6h ago", avatar: "/images/female/tinder/4.jpg", verified: true, identity: "Man", distance: "8 km", bio: "Just a guy who enjoys good food, good company, and exploring new places.", zodiac: "Libra", mbti: "ESFJ", passion: "Foodie", interests: ["Travel", "Cooking", "Sports"] },
-  { name: "Thomas", age: 30, lastSeen: "2h ago", avatar: "/images/female/tinder/5.jpg", verified: true, identity: "Man", distance: "4 km", bio: "Trying to find someone who won't steal my fries. Kidding... mostly.", zodiac: "Scorpio", mbti: "ISTP", passion: "Traveling", interests: ["Photography", "Motorcycles", "Gym"] },
-  { name: "Edward", age: 24, lastSeen: "7h ago", avatar: "/images/female/tinder/6.jpg", verified: false, identity: "Man", distance: "6 km", bio: "Fluent in sarcasm and bad jokes. Looking for a partner in crime.", zodiac: "Aquarius", mbti: "ENTP", passion: "Gaming", interests: ["Comedy", "Sci-Fi", "Concerts"] },
-];
-const defaultCensoredPhotos = ["/images/censored/photo1.jpg", "/images/censored/photo2.jpg", "/images/censored/photo3.jpg", "/images/censored/photo4.jpg"];
-const femaleCensoredPhotos = ["/images/male/tinder/censored/censored-f-1.jpg", "/images/male/tinder/censored/censored-f-2.jpg", "/images/male/tinder/censored/censored-f-3.jpg", "/images/male/tinder/censored/censored-f-4.jpg"];
-const maleCensoredPhotos = ["/images/female/tinder/censored/censored-h-1.jpg", "/images/female/tinder/censored/censored-h-2.jpg", "/images/female/tinder/censored/censored-h-3.jpg", "/images/female/tinder/censored/censored-h-4.jpg"];
+const appLogos = [
+  { name: "Tinder", color: "from-orange-500 to-pink-500", icon: Flame },
+  { name: "Bumble", color: "from-yellow-400 to-yellow-500", icon: Heart },
+  { name: "Hinge", color: "from-purple-500 to-pink-500", icon: Heart },
+]
 
-// --- COMPONENTES AUXILIARES ---
-const PrevButton = (props: any) => { const { enabled, onClick } = props; return (<button className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full disabled:opacity-30 transition-opacity z-10" onClick={onClick} disabled={!enabled}> <ChevronLeft size={20} /> </button>) }
-const NextButton = (props: any) => { const { enabled, onClick } = props; return (<button className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full disabled:opacity-30 transition-opacity z-10" onClick={onClick} disabled={!enabled}> <ChevronRight size={20} /> </button>) }
-function MatchDetailModal({ match, onClose }: { match: Match; onClose: () => void }) { useEffect(() => { document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = 'unset'; }; }, []); return (<div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 animate-fade-in" onClick={onClose}> <div className="bg-white rounded-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}> <button onClick={onClose} className="absolute top-3 right-3 bg-black/40 hover:bg-black/60 text-white rounded-full p-1.5 z-10"> <X size={20} /> </button> <img src={match.avatar} alt={match.name} className="w-full h-80 object-cover rounded-t-2xl" /> <div className="p-5"> <div className="flex items-center gap-2"> <h1 className="text-3xl font-bold text-gray-800">{match.name}</h1> {match.verified && <CheckCircle className="text-blue-500" fill="white" size={28} />} </div> <div className="flex flex-col gap-1 text-gray-600 mt-2 text-sm"> <div className="flex items-center gap-1.5"><Users size={16} /><p>{match.identity}</p></div> <div className="flex items-center gap-1.5"><MapPin size={16} /><p>{match.location}</p></div> <div className="flex items-center gap-1.5"><p>📍 {match.distance} away</p></div> </div> <div className="mt-6"> <h2 className="font-bold text-gray-800">About Me</h2> <p className="text-gray-600 mt-1">{match.bio}</p> </div> <div className="flex flex-wrap gap-2 mt-4 text-sm"> <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full">{match.zodiac}</span> <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full">{match.mbti}</span> <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full">{match.passion}</span> </div> <div className="mt-6"> <h2 className="font-bold text-gray-800">My Interests</h2> <div className="flex flex-wrap gap-2 mt-2 text-sm"> {match.interests.map(interest => (<span key={interest} className="border border-gray-300 text-gray-700 px-3 py-1 rounded-full">{interest}</span>))} </div> </div> </div> <div className="sticky bottom-0 grid grid-cols-2 gap-4 bg-white p-4 border-t border-gray-200"> <button className="bg-gray-200 text-gray-800 font-bold py-3 rounded-full hover:bg-gray-300 transition-colors">Pass</button> <button className="bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-3 rounded-full hover:opacity-90 transition-opacity">Like</button> </div> </div> </div>) }
+// Loading steps
+const analysisSteps = [
+  { text: "Procesando imagen facial...", duration: 2000 },
+  { text: "Extrayendo características biométricas...", duration: 2500 },
+  { text: "Escaneando base de datos de Tinder...", duration: 3000 },
+  { text: "Escaneando base de datos de Bumble...", duration: 2500 },
+  { text: "Escaneando base de datos de Hinge...", duration: 2500 },
+  { text: "Verificando coincidencias...", duration: 2000 },
+  { text: "Compilando informe...", duration: 1500 },
+]
 
-// --- COMPONENTE PRINCIPAL DA PÁGINA ---
-export default function Upsell2Page() {
-  const [pageState, setPageState] = useState<'input' | 'loading' | 'results'>('input');
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+export default function TinderInvestigationPage() {
+  const router = useRouter()
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [currentStep, setCurrentStep] = useState<"upload" | "gender" | "loading" | "report">("upload")
+  const [loadingStep, setLoadingStep] = useState(0)
+  const [loadingProgress, setLoadingProgress] = useState(0)
+  const [selectedGender, setSelectedGender] = useState<"male" | "female" | null>(null)
+  const [countdown, setCountdown] = useState(299) // 4:59
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 6000, stopOnInteraction: true })]); const [prevBtnEnabled, setPrevBtnEnabled] = useState(false); const [nextBtnEnabled, setNextBtnEnabled] = useState(false); const [selectedIndex, setSelectedIndex] = useState(0); const [scrollSnaps, setScrollSnaps] = useState<number[]>([]); const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]); const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]); const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi]); const onSelect = useCallback(() => { if (!emblaApi) return; setSelectedIndex(emblaApi.selectedScrollSnap()); setPrevBtnEnabled(emblaApi.canScrollPrev()); setNextBtnEnabled(emblaApi.canScrollNext()); }, [emblaApi, setSelectedIndex]); useEffect(() => { if (!emblaApi) return; onSelect(); setScrollSnaps(emblaApi.scrollSnapList()); emblaApi.on("select", onSelect); emblaApi.on("reInit", onSelect); }, [emblaApi, setScrollSnaps, onSelect]); const [timeLeft, setTimeLeft] = useState(5 * 60); useEffect(() => { if (timeLeft === 0) return; const timer = setInterval(() => { setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0)); }, 1000); return () => clearInterval(timer); }, [timeLeft]); const formatTime = (seconds: number) => { const minutes = Math.floor(seconds / 60); const remainingSeconds = seconds % 60; return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`; }
-
-  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
-  const [userLocation, setUserLocation] = useState<string>("your city");
-
+  // Countdown timer effect
   useEffect(() => {
-    if (pageState === 'results') {
-      const fetchLocation = async () => {
-        try {
-          const response = await fetch('/api/location');
-          if (!response.ok) throw new Error('API response not OK');
-          const data = await response.json();
-          if (data.city) { setUserLocation(data.city); }
-        } catch (error) { console.error("Could not fetch location, using default."); }
-      };
-      fetchLocation();
+    if (currentStep === "report" && countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => prev - 1)
+      }, 1000)
+      return () => clearInterval(timer)
     }
-  }, [pageState]);
+  }, [currentStep, countdown])
 
-  const fakeMatches: Match[] = useMemo(() => {
-    let baseMatches: Omit<Match, 'location'>[];
-    if (selectedGender === 'Male') { baseMatches = femaleMatchesData; }
-    else if (selectedGender === 'Female') { baseMatches = maleMatchesData; }
-    else { baseMatches = defaultMatchesData; }
-    return baseMatches.map(match => ({ ...match, location: `Lives in ${userLocation}` }));
-  }, [userLocation, selectedGender]);
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+  }
 
-  const censoredPhotos = useMemo(() => {
-    if (selectedGender === 'Male') { return femaleCensoredPhotos; }
-    if (selectedGender === 'Female') { return maleCensoredPhotos; }
-    return defaultCensoredPhotos;
-  }, [selectedGender]);
-
-  useEffect(() => {
-    if (pageState === 'results' && typeof (window as any).checkoutElements !== "undefined") {
-      try { (window as any).checkoutElements.init("salesFunnel").mount("#hotmart-sales-funnel"); }
-      catch (e) { console.error("Failed to mount Hotmart widget:", e); }
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string)
+      }
+      reader.readAsDataURL(file)
     }
-  }, [pageState]);
+  }
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImagePreview(URL.createObjectURL(e.target.files[0]));
+  const handleGenderSelect = (gender: "male" | "female") => {
+    setSelectedGender(gender)
+    setCurrentStep("loading")
+    startLoadingSimulation()
+  }
+
+  const startLoadingSimulation = () => {
+    let step = 0
+    let progress = 0
+
+    const progressInterval = setInterval(() => {
+      progress += 1
+      setLoadingProgress(Math.min(progress, 100))
+
+      if (progress >= 100) {
+        clearInterval(progressInterval)
+        setCurrentStep("report")
+      }
+    }, 170)
+
+    const stepInterval = setInterval(() => {
+      step += 1
+      if (step < analysisSteps.length) {
+        setLoadingStep(step)
+      } else {
+        clearInterval(stepInterval)
+      }
+    }, 2400)
+  }
+
+  const handleStartScan = () => {
+    if (uploadedImage) {
+      setCurrentStep("gender")
     }
-  };
+  }
 
-  const handleStartInvestigation = () => {
-    setPageState('loading');
-    setTimeout(() => { setPageState('results'); }, 3000);
-  };
+  const handleUnlockReport = () => {
+    localStorage.setItem("selected_upsell", "tinder")
+    router.push("/step-2")
+  }
 
-  const genderEmojis: { [key: string]: string } = {
-    'Male': '👨🏻',
-    'Female': '👩🏻',
-    'Non-binary': '🧑🏻'
-  };
-
-  return (
-    <>
-      <div className="fixed top-0 w-full z-50 bg-red-600 text-white p-2 text-center text-sm font-semibold">
-        <span className="font-bold text-yellow-400">Attention:</span> do not close this page, Your payment is still being processed.
+  // Upload Component
+  const UploadSection = () => (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-orange-500 to-pink-500 py-4 px-4">
+        <div className="max-w-md mx-auto flex items-center justify-center gap-2">
+          <Flame className="h-6 w-6 text-white" />
+          <span className="text-white font-bold text-lg">Escáner de Apps de Citas</span>
+        </div>
       </div>
 
-      <Script src="https://checkout.hotmart.com/lib/hotmart-checkout-elements.js" strategy="afterInteractive" />
-      {selectedMatch && <MatchDetailModal match={selectedMatch} onClose={() => setSelectedMatch(null)} />}
+      <div className="max-w-md mx-auto px-4 py-8">
+        {/* Badge */}
+        <div className="text-center mb-6">
+          <span className="inline-flex items-center gap-2 bg-pink-500/20 text-pink-400 px-4 py-2 rounded-full text-sm font-medium border border-pink-500/30">
+            <Shield className="h-4 w-4" />
+            Reconocimiento Facial - Enero 2026
+          </span>
+        </div>
 
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 pt-12">
-        <main className="w-full max-w-md mx-auto">
+        {/* Main Card */}
+        <div className="bg-white rounded-3xl shadow-2xl p-6 mb-6">
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-100 to-pink-100 rounded-full mb-4">
+              <Camera className="h-8 w-8 text-pink-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Sube Su Foto
+            </h1>
+            <p className="text-gray-600">
+              Escanearemos todas las plataformas de citas para encontrar perfiles coincidentes.
+            </p>
+          </div>
 
-          {pageState === 'input' && (
-            <div className="space-y-6 animate-fade-in">
-              <p className="text-lg text-center text-gray-800 pt-5">
-                <span className="font-bold text-red-600">ATTENTION!</span> Our system has identified that this user is registered on dating apps. Use our image scanner to verify.
-              </p>
-
-              <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Upload Their Photo for Facial Recognition</h2>
-                <label htmlFor="photo-upload" className="w-40 h-40 mx-auto flex items-center justify-center border-2 border-dashed border-blue-400 rounded-xl cursor-pointer hover:bg-blue-50 transition-colors">
-                  <input id="photo-upload" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-xl" />
-                  ) : (
-                    <Camera className="w-12 h-12 text-gray-400" />
-                  )}
-                </label>
-                <p className="text-sm text-gray-500 mt-4">We'll scan across all dating platforms to find matching profiles - even ones they think are hidden.</p>
-              </div>
-
-              <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">What gender are they?</h2>
-                <div className="grid grid-cols-3 gap-4">
-                  {['Male', 'Female', 'Non-binary'].map((gender) => (
-                    <button key={gender} onClick={() => setSelectedGender(gender)} className={`p-4 border rounded-xl transition-all duration-200 ${selectedGender === gender ? 'border-blue-500 bg-blue-100 ring-2 ring-blue-300' : 'border-gray-200 hover:border-gray-400'}`}>
-                      <span className="text-4xl mb-2 block" role="img" aria-label={gender}>
-                        {genderEmojis[gender]}
-                      </span>
-                      <span className="font-semibold text-gray-700">{gender}</span>
-                    </button>
-                  ))}
+          {/* Upload Area */}
+          <label className="block cursor-pointer mb-6">
+            <div className={`relative w-40 h-40 mx-auto rounded-2xl border-2 border-dashed transition-all ${uploadedImage ? "border-pink-500 bg-pink-50" : "border-gray-300 hover:border-pink-400 hover:bg-pink-50"
+              }`}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              {uploadedImage ? (
+                <Image
+                  src={uploadedImage}
+                  alt="Subida"
+                  fill
+                  className="object-cover rounded-2xl"
+                />
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
+                  <Camera className="h-12 w-12 mb-2" />
+                  <span className="text-sm">Toca para subir</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-4">
-                  This helps us track their device activity and cross-reference with dating app usage patterns.
-                </p>
+              )}
+            </div>
+          </label>
+
+          <button
+            onClick={handleStartScan}
+            disabled={!uploadedImage}
+            className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <Search className="h-5 w-5" />
+            INICIAR ESCANEO FACIAL
+          </button>
+        </div>
+
+        {/* App Logos */}
+        <div className="text-center mb-6">
+          <p className="text-gray-400 text-sm mb-4">Escaneando en:</p>
+          <div className="flex justify-center gap-4">
+            {appLogos.map((app, i) => (
+              <div key={i} className="flex flex-col items-center gap-2">
+                <div className={`w-12 h-12 bg-gradient-to-br ${app.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                  <app.icon className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-xs text-gray-400">{app.name}</span>
               </div>
+            ))}
+          </div>
+        </div>
 
-              <button
-                onClick={handleStartInvestigation}
-                disabled={!imagePreview || !selectedGender}
-                className="w-full text-white font-bold py-4 px-6 rounded-xl shadow-lg flex items-center justify-center gap-3 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed bg-red-600 hover:bg-red-700"
-              >
-                <Search size={20} />
-                <span>START INVESTIGATION - FIND THE TRUTH</span>
-              </button>
-            </div>
-          )}
-
-          {pageState === 'loading' && (
-            <div className="text-center animate-fade-in space-y-4 py-10">
-              <Loader2 className="w-16 h-16 text-blue-600 mx-auto animate-spin" />
-              <h2 className="text-2xl font-bold text-gray-800">Searching...</h2>
-              <p className="text-gray-600">Cross-referencing image with millions of profiles.<br />This may take a moment.</p>
-            </div>
-          )}
-
-          {pageState === 'results' && (
-            <div className="space-y-4 animate-fade-in">
-              <div className="bg-red-600 text-white p-3 rounded-lg shadow-lg flex items-center gap-3"><Zap size={24} /><div><h1 className="font-bold text-base">PROFILE FOUND - THEY ARE ACTIVE ON TINDER</h1><p className="text-xs text-red-200">Last seen: <span className="font-semibold">Online now</span></p></div></div>
-              <div className="bg-orange-500 text-white p-3 rounded-lg shadow-lg flex items-center gap-3"><AlertTriangle size={24} /><p className="text-sm font-semibold"><span className="font-bold">ATTENTION: ACTIVE PROFILE FOUND!</span> We confirm this number is linked to an ACTIVE Tinder profile. Latest usage records detected in {userLocation}.</p></div>
-              <div className="grid grid-cols-4 gap-3 text-center"><div className="bg-white p-3 rounded-lg shadow-md"><p className="text-2xl font-bold text-red-600">6</p><p className="text-xs text-gray-500 font-semibold">MATCHES (7 DAYS)</p></div><div className="bg-white p-3 rounded-lg shadow-md"><p className="text-2xl font-bold text-orange-500">30</p><p className="text-xs text-gray-500 font-semibold">LIKES (7 DAYS)</p></div><div className="bg-white p-3 rounded-lg shadow-md"><p className="text-2xl font-bold text-purple-600">4</p><p className="text-xs text-gray-500 font-semibold">ACTIVE CHATS</p></div><div className="bg-white p-3 rounded-lg shadow-md"><p className="text-2xl font-bold text-gray-800">18h</p><p className="text-xs text-gray-500 font-semibold">LAST ACTIVE</p></div></div>
-              <div className="bg-gradient-to-b from-slate-800 to-slate-900 text-white p-5 rounded-lg shadow-2xl"><div className="flex items-center gap-2 mb-2"><Flame className="text-orange-400" size={20} /><h2 className="text-lg font-bold">RECENT MATCHES FOUND</h2></div><p className="text-sm text-gray-400 mb-5">Tap on a match to view more information</p><div className="space-y-4">{fakeMatches.map((match, index) => (<div key={index} onClick={() => setSelectedMatch(match)} className="flex items-center gap-4 bg-slate-700/50 p-3 rounded-lg cursor-pointer hover:bg-slate-600 transition-colors"><img src={match.avatar} alt={match.name} className="w-12 h-12 rounded-full object-cover border-2 border-slate-600" /><div className="flex-grow"><p className="font-bold">{match.name}, {match.age}</p><p className="text-xs text-gray-400">Last seen: {match.lastSeen}</p><p className="text-xs font-semibold text-green-400">Active chat: frequently online</p></div><div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div></div>))}</div></div>
-              <div className="bg-gradient-to-b from-slate-800 to-slate-900 text-white p-5 rounded-lg shadow-2xl"><div className="flex items-center gap-2"><Camera className="text-slate-300" size={20} /><h2 className="text-lg font-bold">CENSORED PHOTOS</h2></div><p className="text-sm text-gray-400 mb-4">See all their profile photos (including the ones you've never seen)</p><div className="overflow-hidden relative" ref={emblaRef}><div className="flex">{censoredPhotos.map((src, index) => (<div className="relative flex-[0_0_100%] aspect-video bg-gray-700 rounded-lg overflow-hidden" key={index}><img src={src} className="w-full h-full object-cover filter blur-md" alt="Censored content" /><div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white"><Lock size={32} /><span className="font-bold mt-1 text-sm tracking-widest">BLOCKED</span></div></div>))}</div><PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} /><NextButton onClick={scrollNext} enabled={nextBtnEnabled} /></div><div className="flex justify-center items-center mt-4 gap-2">{scrollSnaps.map((_, index) => (<button key={index} onClick={() => scrollTo(index)} className={`w-2 h-2 rounded-full transition-colors ${index === selectedIndex ? 'bg-white' : 'bg-slate-600'}`} />))}</div></div>
-              <div className="bg-white p-5 rounded-lg shadow-xl text-center"><div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-cyan-500 flex items-center justify-center mb-4"><Lock className="text-white" size={32} /></div><h2 className="text-xl font-bold text-gray-800"><span className="text-yellow-600">🔓</span> UNLOCK COMPLETE REPORT</h2><p className="text-gray-600 mt-1">Get instant access to the full report with all the matches and photos exchanged</p><div className="bg-red-100 border-2 border-red-500 text-red-800 p-4 rounded-lg mt-5"><div className="flex items-center justify-center gap-2"><AlertTriangle className="text-red-600" /><h3 className="font-bold">THE REPORT WILL BE DELETED IN:</h3></div><p className="text-4xl font-mono font-bold my-1">{formatTime(timeLeft)}</p><p className="text-xs text-red-700">After the time expires, this report will be permanently deleted for privacy reasons. This offer cannot be recovered at a later date.</p></div><div id="hotmart-sales-funnel" className="w-full pt-4"></div></div>
-            </div>
-          )}
-        </main>
+        {/* Trust Badge */}
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 text-gray-400 text-xs">
+            <Lock className="h-3 w-3" />
+            <span>La foto es procesada de forma segura y nunca almacenada</span>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   )
+
+  // Gender Selection
+  const GenderSelectionSection = () => (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+      <div className="max-w-md w-full">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-100 to-pink-100 rounded-full mb-4">
+            <User className="h-8 w-8 text-pink-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            ¿Cuál es el género del objetivo?
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Esto optimiza nuestra búsqueda en apps de citas
+          </p>
+
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              onClick={() => handleGenderSelect("male")}
+              className="flex flex-col items-center gap-3 p-6 bg-blue-50 hover:bg-blue-100 rounded-2xl border-2 border-transparent hover:border-blue-500 transition-all"
+            >
+              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-2xl">👨</span>
+              </div>
+              <span className="font-semibold text-gray-900">Masculino</span>
+            </button>
+
+            <button
+              onClick={() => handleGenderSelect("female")}
+              className="flex flex-col items-center gap-3 p-6 bg-pink-50 hover:bg-pink-100 rounded-2xl border-2 border-transparent hover:border-pink-500 transition-all"
+            >
+              <div className="w-16 h-16 bg-pink-500 rounded-full flex items-center justify-center">
+                <span className="text-2xl">👩</span>
+              </div>
+              <span className="font-semibold text-gray-900">Femenino</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  // Loading Component
+  const LoadingSection = () => (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+      <div className="max-w-md w-full">
+        <div className="bg-white rounded-3xl shadow-2xl p-8">
+          {/* Photo Preview */}
+          <div className="text-center mb-6">
+            <div className="relative inline-block">
+              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-pink-500">
+                {uploadedImage && (
+                  <Image
+                    src={uploadedImage}
+                    alt="Escaneando"
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                  />
+                )}
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center border-2 border-white animate-pulse">
+                <Search className="h-4 w-4 text-white" />
+              </div>
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-6">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-gray-600">Escaneando bases de datos...</span>
+              <span className="font-bold text-pink-600">{loadingProgress}%</span>
+            </div>
+            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-orange-500 to-pink-500 rounded-full transition-all duration-300"
+                style={{ width: `${loadingProgress}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Current Step */}
+          <div className="bg-gray-50 rounded-xl p-4 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center animate-pulse">
+                <Search className="h-4 w-4 text-white" />
+              </div>
+              <span className="text-gray-700 text-sm">
+                {analysisSteps[loadingStep]?.text || "Finalizando..."}
+              </span>
+            </div>
+          </div>
+
+          {/* Completed Steps */}
+          <div className="space-y-2">
+            {analysisSteps.slice(0, loadingStep).map((step, i) => (
+              <div key={i} className="flex items-center gap-2 text-gray-500 text-xs">
+                <Check className="h-3 w-3 text-green-500" />
+                {step.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  // Report Component
+  const ReportSection = () => (
+    <div className="min-h-screen bg-gradient-to-b from-red-900 via-slate-900 to-slate-900">
+      {/* Alert Banner */}
+      <div className="bg-red-600 text-white py-3 px-4 text-center animate-pulse">
+        <div className="flex items-center justify-center gap-2">
+          <AlertTriangle className="h-5 w-5" />
+          <span className="font-bold">¡ALERTA! Se encontraron 3 coincidencias potenciales</span>
+        </div>
+      </div>
+
+      <div className="max-w-md mx-auto px-4 py-6">
+        {/* Timer Card */}
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-4 text-center">
+          <div className="flex items-center justify-center gap-2 text-red-600 mb-2">
+            <Clock className="h-5 w-5" />
+            <span className="font-medium">El informe expira en:</span>
+          </div>
+          <div className="text-4xl font-mono font-bold text-red-600">
+            {formatTime(countdown)}
+          </div>
+        </div>
+
+        {/* Matches Found */}
+        <div className="bg-white rounded-2xl shadow-xl p-6 mb-4">
+          <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Heart className="h-5 w-5 text-red-500" />
+            Perfiles Coincidentes Encontrados
+          </h3>
+
+          <div className="space-y-4">
+            {potentialMatches.map((match) => (
+              <div key={match.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl relative">
+                <div className="relative">
+                  <Image
+                    src={match.image}
+                    alt={match.name}
+                    width={64}
+                    height={64}
+                    className="rounded-full blur-md"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Lock className="h-6 w-6 text-gray-600" />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-gray-900 blur-sm">{match.name}</p>
+                  <p className="text-sm text-gray-500">
+                    {match.age} años • {match.distance}
+                  </p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <div className="h-2 w-16 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-orange-500 to-red-500"
+                        style={{ width: `${match.matchScore}%` }}
+                      />
+                    </div>
+                    <span className="text-xs text-red-600 font-bold">{match.matchScore}%</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 p-3 bg-gray-100 rounded-lg text-center">
+            <Lock className="h-4 w-4 text-gray-400 mx-auto mb-1" />
+            <p className="text-xs text-gray-500">Fotos de perfil y biografías bloqueadas</p>
+          </div>
+        </div>
+
+        {/* Apps Detected */}
+        <div className="bg-white rounded-2xl shadow-xl p-6 mb-4">
+          <h3 className="font-bold text-gray-900 mb-4">Apps de Citas Detectadas</h3>
+          <div className="flex justify-center gap-4">
+            {appLogos.map((app, i) => (
+              <div key={i} className="flex flex-col items-center gap-2">
+                <div className={`relative w-14 h-14 bg-gradient-to-br ${app.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                  <app.icon className="h-7 w-7 text-white" />
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-white">
+                    <Check className="h-3 w-3 text-white" />
+                  </div>
+                </div>
+                <span className="text-xs text-gray-600">{app.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Unlock CTA */}
+        <div className="bg-gradient-to-r from-orange-500 to-pink-500 rounded-2xl shadow-xl p-6 text-white text-center">
+          <AlertTriangle className="h-10 w-10 mx-auto mb-3" />
+          <h3 className="font-bold text-xl mb-2">¡Informe Completo Listo!</h3>
+          <p className="text-pink-100 text-sm mb-4">
+            Desbloquea fotos de perfil, biografías, última actividad y capturas de conversaciones.
+          </p>
+          <button
+            onClick={handleUnlockReport}
+            className="w-full bg-white text-pink-600 font-bold py-4 rounded-xl shadow-lg hover:bg-pink-50 transition-all flex items-center justify-center gap-2"
+          >
+            <Lock className="h-5 w-5" />
+            DESBLOQUEAR INFORME COMPLETO
+          </button>
+          <p className="text-xs text-pink-200 mt-3">
+            El acceso expira en {formatTime(countdown)}
+          </p>
+        </div>
+
+        {/* Trust Footer */}
+        <div className="mt-6 text-center">
+          <div className="flex items-center justify-center gap-4 text-gray-400 text-xs">
+            <span className="flex items-center gap-1">
+              <Shield className="h-3 w-3" /> 100% Anónimo
+            </span>
+            <span className="flex items-center gap-1">
+              <Lock className="h-3 w-3" /> Encriptación SSL
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  // Render based on current step
+  switch (currentStep) {
+    case "gender":
+      return <GenderSelectionSection />
+    case "loading":
+      return <LoadingSection />
+    case "report":
+      return <ReportSection />
+    default:
+      return <UploadSection />
+  }
 }

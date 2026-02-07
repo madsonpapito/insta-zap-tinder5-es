@@ -21,8 +21,8 @@ const RealtimeMap = ({ lat, lng, city, country }: { lat: number; lng: number; ci
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
       <div className="absolute inset-0 p-4 flex flex-col justify-between">
         <div className="flex justify-between items-start">
-          <span className="bg-gray-800/80 text-white text-xs font-bold py-1 px-3 rounded">GPS TRACKING</span>
-          <span className="bg-red-600 text-white text-xs font-bold py-1 px-3 rounded">LIVE</span>
+          <span className="bg-gray-800/80 text-white text-xs font-bold py-1 px-3 rounded">RASTREO GPS</span>
+          <span className="bg-red-600 text-white text-xs font-bold py-1 px-3 rounded">EN VIVO</span>
         </div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="absolute h-20 w-20 rounded-full bg-red-600/30 animate-ping"></div>
@@ -33,12 +33,12 @@ const RealtimeMap = ({ lat, lng, city, country }: { lat: number; lng: number; ci
         <div className="text-white">
           <div className="flex items-center gap-2 font-bold text-red-400">
             <AlertTriangle className="h-5 w-5" />
-            <span>SUSPICIOUS ACTIVITY DETECTED</span>
+            <span>ACTIVIDAD SOSPECHOSA DETECTADA</span>
           </div>
           {/* Exibe a localização dinâmica recebida pelas props */}
-          <p className="text-sm text-gray-200">Location: {city}, {country}</p>
-          <p className="text-sm text-gray-200">Coordinates: {lat.toFixed(4)}, {lng.toFixed(4)}</p>
-          <p className="text-xs text-gray-300">Device was tracked to this area</p>
+          <p className="text-sm text-gray-200">Ubicación: {city}, {country}</p>
+          <p className="text-sm text-gray-200">Coordenadas: {lat.toFixed(4)}, {lng.toFixed(4)}</p>
+          <p className="text-xs text-gray-300">El dispositivo fue rastreado a esta área</p>
         </div>
       </div>
     </div>
@@ -125,7 +125,7 @@ const ChatPopup = ({
 
         {/* Rodapé */}
         <div className="absolute bottom-0 left-0 right-0 p-5 text-center bg-gradient-to-t from-white via-white/95 to-transparent">
-          <p className="text-gray-700 font-medium">To view the full conversation, you need to unlock the chats.</p>
+          <p className="text-gray-700 font-medium">Para ver la conversación completa, necesitas desbloquear los chats.</p>
         </div>
       </div>
     </div>
@@ -167,7 +167,7 @@ export default function Step4Male() {
         }
 
         const data = await response.json();
-        
+
         // A lógica de tratamento dos dados permanece a mesma, pois nossa API
         // repassa os dados da ip-api.com.
         if (data.lat && data.lon) {
@@ -200,49 +200,49 @@ export default function Step4Male() {
 
   const conversations = [
     {
-      img: "/images/male/3.png", name: "Blocked 🔒", msg: "Recovered deleted message", time: "Yesterday", popupName: "Blocked 🔒",
+      img: "/images/male/3.png", name: "Bloqueado 🔒", msg: "Mensaje eliminado recuperado", time: "Ayer", popupName: "Bloqueado 🔒",
       chatData: [
-        { type: "incoming", content: "Hi, how are you?", time: "2:38 PM" },
-        { type: "outgoing", content: "I'm good, and you?", time: "2:40 PM" },
-        { type: "incoming", content: "Blocked content", time: "2:43 PM", isBlocked: true },
-        { type: "outgoing", content: "Blocked content", time: "2:43 PM", isBlocked: true },
+        { type: "incoming", content: "Hola, ¿cómo estás?", time: "2:38 PM" },
+        { type: "outgoing", content: "Estoy bien, ¿y tú?", time: "2:40 PM" },
+        { type: "incoming", content: "Contenido bloqueado", time: "2:43 PM", isBlocked: true },
+        { type: "outgoing", content: "Contenido bloqueado", time: "2:43 PM", isBlocked: true },
       ] as Message[],
     },
     {
-      img: "/images/male/303.png", name: "Blocked 🔒", msg: "Suspicious audio detected", time: "2 days ago", popupName: "Blocked",
+      img: "/images/male/303.png", name: "Bloqueado 🔒", msg: "Audio sospechoso detectado", time: "Hace 2 días", popupName: "Bloqueado",
       chatData: [
-        { type: "incoming", content: "Hey handsome", time: "10:21 PM" },
-        { type: "outgoing", content: "I'm here, my love", time: "10:27 PM" },
-        { type: "incoming", content: "Blocked content", time: "10:29 PM", isBlocked: true },
+        { type: "incoming", content: "Hola guapo", time: "10:21 PM" },
+        { type: "outgoing", content: "Aquí estoy, mi amor", time: "10:27 PM" },
+        { type: "incoming", content: "Contenido bloqueado", time: "10:29 PM", isBlocked: true },
       ] as Message[],
     },
     {
-      img: "/images/male/331.png", name: "Blocked 🔒", msg: "Suspicious photos found", time: "3 days ago", popupName: "Blocked",
+      img: "/images/male/331.png", name: "Bloqueado 🔒", msg: "Fotos sospechosas encontradas", time: "Hace 3 días", popupName: "Bloqueado",
       chatData: [
-        { type: "incoming", content: "Hi, how have you been?", time: "11:45 AM" },
-        { type: "outgoing", content: "I'm fine, thanks! What about you?", time: "11:47 AM" },
-        { type: "incoming", content: "Blocked content", time: "11:50 AM", isBlocked: true },
+        { type: "incoming", content: "Hola, ¿cómo has estado?", time: "11:45 AM" },
+        { type: "outgoing", content: "Estoy bien, ¡gracias! ¿Y tú?", time: "11:47 AM" },
+        { type: "incoming", content: "Contenido bloqueado", time: "11:50 AM", isBlocked: true },
       ] as Message[],
     },
   ];
 
   const suspiciousKeywords = [
-    { word: "Naughty", count: 13 }, { word: "Love", count: 22 }, { word: "Secret", count: 7 },
-    { word: "Hidden", count: 11 }, { word: "Don't tell", count: 5 },
+    { word: "Travieso", count: 13 }, { word: "Amor", count: 22 }, { word: "Secreto", count: 7 },
+    { word: "Oculto", count: 11 }, { word: "No digas", count: 5 },
   ];
 
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <div className="bg-green-500 text-white text-center py-4">
-        <h1 className="text-xl font-bold">WhatsApp Access Report Profile</h1>
-        <p className="text-sm opacity-90">Check below the most relevant from the analysis of the personal mobile</p>
+        <h1 className="text-xl font-bold">Informe de Acceso a WhatsApp</h1>
+        <p className="text-sm opacity-90">Consulta a continuación lo más relevante del análisis del móvil personal</p>
       </div>
 
       <div className="max-w-4xl mx-auto p-4 space-y-6">
         {/* User Detectado */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Detected user</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Usuario detectado</h2>
           <div className="flex justify-center">
             <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
               {profilePhoto && (
@@ -256,12 +256,12 @@ export default function Step4Male() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-            <h2 className="text-lg font-semibold text-gray-800">Conversation Analysis</h2>
+            <h2 className="text-lg font-semibold text-gray-800">Análisis de Conversaciones</h2>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-            <span className="font-semibold text-red-500">148 suspicious conversations</span> were found. The system recovered <span className="font-semibold text-orange-500">deleted messages</span>.
+            <span className="font-semibold text-red-500">148 conversaciones sospechosas</span> fueron encontradas. El sistema recuperó <span className="font-semibold text-orange-500">mensajes eliminados</span>.
           </p>
-           <p className="text-xs text-gray-500 mb-4">Tap a conversation below to view details.</p>
+          <p className="text-xs text-gray-500 mb-4">Toca una conversación para ver los detalles.</p>
           <div className="space-y-3">
             {conversations.map((convo, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100" onClick={() => setSelectedConvoIndex(index)}>
@@ -275,10 +275,10 @@ export default function Step4Male() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-            <h2 className="text-lg font-semibold text-gray-800">Recovered Media</h2>
+            <h2 className="text-lg font-semibold text-gray-800">Multimedia Recuperada</h2>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-            <span className="font-semibold text-red-500">5 compromising audios</span> and <span className="font-semibold text-red-500">247 deleted photos</span> were found.
+            <span className="font-semibold text-red-500">5 audios comprometedores</span> y <span className="font-semibold text-red-500">247 fotos eliminadas</span> fueron encontradas.
           </p>
           <div className="grid grid-cols-3 gap-3">
             {maleImages.map((image, index) => (
@@ -290,9 +290,9 @@ export default function Step4Male() {
         {/* Palavras-chave Suspeitas */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-4 h-4 bg-green-500 rounded-full"></div><h2 className="text-lg font-semibold text-gray-800">Suspicious Keywords</h2>
+            <div className="w-4 h-4 bg-green-500 rounded-full"></div><h2 className="text-lg font-semibold text-gray-800">Palabras Clave Sospechosas</h2>
           </div>
-          <p className="text-sm text-gray-600 mb-4">The system scanned <span className="font-semibold text-red-500">4,327 messages</span> and identified several keywords.</p>
+          <p className="text-sm text-gray-600 mb-4">El sistema escaneó <span className="font-semibold text-red-500">4,327 mensajes</span> e identificó varias palabras clave.</p>
           <div className="space-y-1">
             {suspiciousKeywords.map((item, index) => (
               <div key={index} className="flex items-center justify-between py-3 border-b last:border-b-0 border-gray-200"><span className="text-lg text-gray-800">"{item.word}"</span><div className="flex items-center justify-center w-7 h-7 bg-green-500 rounded-full text-white text-sm font-bold">{item.count}</div></div>
@@ -303,11 +303,11 @@ export default function Step4Male() {
         {/* Localização Suspeita com Mapa */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-4 h-4 bg-green-500 rounded-full"></div><h2 className="text-lg font-semibold text-gray-800">Suspicious Location</h2>
+            <div className="w-4 h-4 bg-green-500 rounded-full"></div><h2 className="text-lg font-semibold text-gray-800">Ubicación Sospechosa</h2>
           </div>
-          <p className="text-sm text-gray-600 mb-4">The device location was tracked. Check below:</p>
+          <p className="text-sm text-gray-600 mb-4">La ubicación del dispositivo fue rastreada. Consulta a continuación:</p>
           {isLoadingLocation ? (
-            <div className="text-center p-10 text-gray-500 h-96 flex items-center justify-center"><p>Detecting location based on your connection...</p></div>
+            <div className="text-center p-10 text-gray-500 h-96 flex items-center justify-center"><p>Detectando ubicación basada en tu conexión...</p></div>
           ) : (
             <RealtimeMap
               lat={location?.lat ?? defaultLocation.lat}
@@ -326,11 +326,11 @@ export default function Step4Male() {
 
         {/* Desconto Exclusivo */}
         <div className="bg-[#0A3622] text-white rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-center">EXCLUSIVE DISCOUNT</h2>
+          <h2 className="text-2xl font-bold text-center">DESCUENTO EXCLUSIVO</h2>
           <div className="text-xl text-red-400 line-through text-center my-2">$197</div>
           <div className="text-4xl font-bold mb-4 text-center">$37</div>
-          <div className="space-y-2 text-sm mb-6 text-left"><div className="flex items-center gap-4"><img src="/images/icone-check.png" alt="Ícone de verificação" className="h-8 w-8" /><span>This person recently communicated whith 3 people from (IP)</span></div><div className="flex items-center gap-4"><img src="/images/icone-check.png" alt="Ícone de verificação" className="h-8 w-8" /><span>Our AI detected a suspicious message</span></div><div className="flex items-center gap-4"><img src="/images/icone-check.png" alt="Ícone de verificação" className="h-8 w-8" /><span>It was deteced that this person viewed the status of contact ****** 6 times today</span></div><div className="flex items-center gap-4"><img src="/images/icone-check.png" alt="Ícone de verificação" className="h-8 w-8" /><span>It was detected that this person archived 2 conversations yesterday</span></div></div>
-          <a href="https://pay.hotmart.com/R102720481T?off=m3prb7n1&checkoutMode=10" target="_blank" rel="noopener noreferrer" className="block w-full rounded-full bg-[#26d366] py-3 text-lg font-bold text-white text-center shadow-[0_4px_12px_rgba(38,211,102,0.3)] transition duration-150 ease-in-out hover:bg-[#22b858] hover:shadow-lg">BUY NOW →</a>
+          <div className="space-y-2 text-sm mb-6 text-left"><div className="flex items-center gap-4"><img src="/images/icone-check.png" alt="Ícono de verificación" className="h-8 w-8" /><span>Esta persona se comunicó recientemente con 3 personas desde (IP)</span></div><div className="flex items-center gap-4"><img src="/images/icone-check.png" alt="Ícono de verificación" className="h-8 w-8" /><span>Nuestra IA detectó un mensaje sospechoso</span></div><div className="flex items-center gap-4"><img src="/images/icone-check.png" alt="Ícono de verificación" className="h-8 w-8" /><span>Se detectó que esta persona vio el estado del contacto ****** 6 veces hoy</span></div><div className="flex items-center gap-4"><img src="/images/icone-check.png" alt="Ícono de verificación" className="h-8 w-8" /><span>Se detectó que esta persona archivó 2 conversaciones ayer</span></div></div>
+          <a href="https://pay.hotmart.com/R102720481T?off=m3prb7n1&checkoutMode=10" target="_blank" rel="noopener noreferrer" className="block w-full rounded-full bg-[#26d366] py-3 text-lg font-bold text-white text-center shadow-[0_4px_12px_rgba(38,211,102,0.3)] transition duration-150 ease-in-out hover:bg-[#22b858] hover:shadow-lg">COMPRAR AHORA →</a>
         </div>
 
         {/* Garantia de 30 Dias */}
