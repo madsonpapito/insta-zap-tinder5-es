@@ -1,6 +1,9 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { User, CheckCircle, Heart, MessageCircle, Lock, AlertTriangle, Wifi, Instagram, Whatsapp, Tinder, LockOpen } from "lucide-react"
 import { useFacebookTracking } from "@/hooks/useFacebookTracking"
@@ -197,6 +200,7 @@ const PageHeader = () => (
 
 // --- Componente da Página ---
 export default function Step2() {
+  const router = useRouter()
   const [step, setStep] = useState(1)
   const [instagramHandle, setInstagramHandle] = useState("")
   const [selectedGender, setSelectedGender] = useState<string | null>(null)
@@ -902,13 +906,8 @@ export default function Step2() {
 
         {/* --- MAIN BUTTON AND PRICE --- */}
         <a
-          href="https://pay.mycheckoutt.com/0198c1be-98b4-7315-a3bc-8c0fa9120e5c?ref="
-          onClick={() => {
-            // Facebook Tracking: Envia evento InitiateCheckout con datos enriquecidos
-            const userGender = selectedGender === 'male' ? 'female' : selectedGender === 'female' ? 'male' : undefined;
-            trackInitiateCheckout(27, 'USD', { gender: userGender });
-          }}
-          className="mt-6 block w-full bg-green-500 hover:bg-green-600 text-white font-bold text-lg py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+          href="https://pay.mycheckoutt.com/0198c1be-98b4-7315-a3bc-8c0fa9120e5c"
+          className="mt-6 block w-full bg-green-500 hover:bg-green-600 text-center text-white font-bold text-lg py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
         >
           🔓 SÍ, QUIERO EL INFORME COMPLETO
         </a>

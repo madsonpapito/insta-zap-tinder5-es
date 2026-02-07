@@ -50,6 +50,16 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/u2/page.js"
+    ],
+    "/api/proxy-image/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/proxy-image/route.js"
+    ],
+    "/api/whatsapp-photo/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/whatsapp-photo/route.js"
     ]
   }
 }
