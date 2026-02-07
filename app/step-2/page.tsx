@@ -906,7 +906,7 @@ export default function Step2() {
           onClick={() => {
             // Facebook Tracking: Envia evento InitiateCheckout con datos enriquecidos
             const userGender = selectedGender === 'male' ? 'female' : selectedGender === 'female' ? 'male' : undefined;
-            trackInitiateCheckout(37, 'USD', { gender: userGender });
+            trackInitiateCheckout(27, 'USD', { gender: userGender });
           }}
           className="mt-6 block w-full bg-green-500 hover:bg-green-600 text-white font-bold text-lg py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
         >
@@ -916,7 +916,7 @@ export default function Step2() {
           <p className="text-gray-500">
             De <span className="line-through">$79</span> por solo
           </p>
-          <p className="text-4xl font-bold text-green-600">$37</p>
+          <p className="text-4xl font-bold text-green-600">$27</p>
           <p className="text-xs text-gray-400 mt-1">(Pago Único)</p>
         </div>
 
