@@ -36,36 +36,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/instagram/posts/route.js"
     ],
-    "/api/proxy-image/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/proxy-image/route.js"
-    ],
-    "/step-1-v2/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/step-1-v2/page.js"
-    ],
-    "/step-1-v3/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/step-1-v3/page.js"
-    ],
-    "/initpage/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/initpage/page.js"
-    ],
-    "/initpage1/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/initpage1/page.js"
-    ],
-    "/initpage2/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/initpage2/page.js"
-    ],
     "/u1/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
